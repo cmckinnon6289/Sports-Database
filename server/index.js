@@ -17,7 +17,7 @@ app.listen(PORT, () => {
 
 require('./db');
 
-api.get('/api/internal/test', async(req, res) => {
+app.get('/api/internal/test', async(req, res) => {
     try {
         res.json({ message: "hi! the API is working. have a great day :)" });
     } catch(err) {
