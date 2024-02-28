@@ -13,7 +13,11 @@ const eventSchema = new mongoose.Schema({
         type: Object,
         required: true
     },
-    timing: {
+    date: {
+        type: Date,
+        required: true
+    },
+    time: {
         type: String,
         required: true
     },
