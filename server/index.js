@@ -59,14 +59,13 @@ app.get('/api/events/allbetween', async (req,res) => {
     }
 })
 
-app.get('/api/events/between-temp', async (req, res) => {
+app.get('/api/events/some-events', async(req, res) => {
     try {
-        const allEvents = await Event.find({});
-        res.json(allEvents)
+        const events = await Event.find({});
+        res.json(events);
     } catch (err) {
-        res.status(500).json({ error: err.message })
+        res.status(500).json({ error: err.message });
     }
-    
 })
 
 app.post('/api/events/new-event', async (req, res) => {
