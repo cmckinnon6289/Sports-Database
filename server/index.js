@@ -49,11 +49,11 @@ app.get('/api/events/events-between', async (req,res) => {
     try {
         const allEvents = await Event.find({});
         let events = [];
-        for (eventObj in allEvents) {
+        /*for (eventObj in allEvents) {
             if (eventObj.date > new Date(req.body.startDate) && eventObj.date < new Date(req.body.endDate))
                 events.push(eventObj);
         };
-        if (!events) return res.status(404).json({ error: `could not find any events between the dates ${req.body.startDate} and ${req.body.endDate}.` });
+        if (!events) return res.status(404).json({ error: `could not find any events between the dates ${req.body.startDate} and ${req.body.endDate}.` });*/
         res.json(events);
     } catch (err) {
         res.status(500).json({ error: err.message });
