@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const Team = require('./Team');
 
 const eventSchema = new mongoose.Schema({
     id: {
@@ -11,11 +10,11 @@ const eventSchema = new mongoose.Schema({
         required: true
     },
     homeTeam: {
-        type: Team,
+        type: Object,
         required: true
     },
     awayTeam: {
-        type: Team,
+        type: Object,
         required: true
     },
     date: {
