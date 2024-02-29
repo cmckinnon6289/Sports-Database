@@ -90,6 +90,6 @@ local functions
 
 async function findTeam(id) {
     const teams = await Team.find({});
-    const team = teams.filter((team) => team.id === id ? team : null);
+    const team = teams.filter((team) => team.id === Number(id) ? team : null);
     return team;
 }
