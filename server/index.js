@@ -61,7 +61,13 @@ app.get('/api/events/events-between', async (req,res) => {
 
 app.post('/api/events/new-event', async (req, res) => {
     try {
-        const event = new Event(req.body);
+        let eventDraft = req.body;
+        eventDraft.homeTeam = await findTeam(eventDraft.homeTeam);
+        eventDraft.awayTeam = await findTeam(eventDraft.awayTeam);
+        if (!eventDraft.homeTeam || !eventDraft.awayTeam) return res.status(404).json({ error: `could not find a team object with either id ${req.body.homeTeam} or ${req.body.awayTeam}` }); 
+
+        eventDraft.awayTeam = await Team.findById(eventDraft.awayTeam);
+        const event = new Event(eventDraft);
         await event.save();
         res.json(event);
     } catch (err) {
@@ -78,3 +84,15 @@ app.post('/api/teams/new-team', async(req, res) => {
         res.status(500).json({ error: err.message });
     }
 })
+
+/*
+
+local functions
+
+*/
+
+async function findTeam(id) {
+    const teams = await Team.find({});
+    const team = teams.filter((team) => team.id === id ? team : null);
+    return team;
+}
