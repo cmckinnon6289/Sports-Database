@@ -25,10 +25,31 @@ app.get('/api/internal/test', async(req, res) => {
     }
 })
 
-app.get('/api/assets/all-events', async(req, res) => {
+app.get('/api/events/all-events', async(req, res) => {
     try {
         const events = await Event.find({});
         res.json(events);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.get('/api/events/:id', async (req, res) => {
+    try {
+        const event = await Event.findById(req.params.id);
+        if (!event) return res.status(404).json({ error: `could not find event with ID ${req.params.id}` })
+        res.json(event);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.get('/api/events/events-between', async (req,res) => {
+    try {
+        const allEvents = await Event.find({});
+        const events = allEvents.filter((event) => (event.date > req.body.startDate) && (event.date < req.body.endDate));
+        res.json(events);
+        if (!events) return res.status(404).json({ error: `could not find any events between the dates ${req.body.startDate} and ${req.body.endDate}.` });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
