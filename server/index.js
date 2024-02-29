@@ -18,7 +18,7 @@ app.listen(PORT, () => {
 
 require('./db');
 
-app.get('/api/internal/test', async(req, res) => {
+app.get('/api/internal/test-api', async(req, res) => {
     try {
         res.json({ message: "hi! the API is working. have a great day :)" });
     } catch(err) {
@@ -91,6 +91,14 @@ app.post('/api/teams/new-team', async(req, res) => {
         res.json(team);
     } catch (err) {
         res.status(500).json({ error: err.message });
+    }
+})
+
+app.get('/api/new-endpoint', async (req, res) => {
+    try {
+        res.json({attempt: "is this a bug"})
+    } catch (err) {
+        
     }
 })
 
