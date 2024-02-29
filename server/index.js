@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 const Event = require('./models/Event');
+const Team = require('./models/Team');
 
 const app = express();
 const PORT = process.env.PORT || 621;
@@ -58,7 +59,7 @@ app.get('/api/events/events-between', async (req,res) => {
     }
 })
 
-app.post('/api/new-event', async (req, res) => {
+app.post('/api/events/new-event', async (req, res) => {
     try {
         const event = new Event(req.body);
         await event.save();
@@ -67,3 +68,13 @@ app.post('/api/new-event', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+app.post('/api/teams/new-team', async(req, res) => {
+    try {
+        const team = new Team(req.body);
+        await team.save();
+        res.json(team);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
