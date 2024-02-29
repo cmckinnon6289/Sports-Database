@@ -91,6 +91,6 @@ local functions
 async function findTeam(id) {
     const teams = await Team.find({});
     const team = teams.filter((team) => team.id === Number(id) ? team : null);
-    if (team.isArray()) return team[0];
+    if (Array.isArray(team)) return team[0];
     return team;
 }
