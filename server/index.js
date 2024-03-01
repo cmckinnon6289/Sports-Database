@@ -17,8 +17,6 @@ app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
 })
 
-
-
 app.get('/api/internal/test-api', async(req, res) => {
     try {
         res.json({ message: "hi! the API is working. have a great day :)" });
@@ -28,15 +26,6 @@ app.get('/api/internal/test-api', async(req, res) => {
 })
 
 app.get('/api/events/all-events', async(req, res) => {
-    try {
-        const events = await Event.find({});
-        res.json(events);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-})
-
-app.get('/api/events/some-events', async(req, res) => {
     try {
         const events = await Event.find({});
         res.json(events);
@@ -97,14 +86,6 @@ app.post('/api/teams/new-team', async(req, res) => {
         res.json(team);
     } catch (err) {
         res.status(500).json({ error: err.message });
-    }
-})
-
-app.get('/api/new-endpoint', async (req, res) => {
-    try {
-        res.json({attempt: "is this a bug"})
-    } catch (err) {
-        
     }
 })
 
