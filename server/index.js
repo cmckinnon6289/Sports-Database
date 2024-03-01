@@ -11,12 +11,13 @@ const PORT = process.env.PORT || 621;
 
 app.use(cors());
 app.use(bodyParser.json());
+require('./db');
 
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
 })
 
-require('./db');
+
 
 app.get('/api/internal/test-api', async(req, res) => {
     try {
@@ -35,7 +36,16 @@ app.get('/api/events/all-events', async(req, res) => {
     }
 })
 
-app.get('/api/events/:id', async (req, res) => {
+app.get('/api/events/some-events', async(req, res) => {
+    try {
+        const events = await Event.find({});
+        res.json(events);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.get('/api/events/by-id/:id', async (req, res) => {
     try {
         const event = await Event.findById(req.params.id);
         if (!event) return res.status(404).json({ error: `could not find event with ID ${req.params.id}` })
@@ -45,28 +55,24 @@ app.get('/api/events/:id', async (req, res) => {
     }
 })
 
-app.get('/api/events/allbetween', async (req,res) => {
+app.get('/api/events/all-between', async (req,res) => {
     try {
         const allEvents = await Event.find({});
-        /*for (eventObj in allEvents) {
+        let events = [];
+        for (eventObj in allEvents) {
             if (eventObj.date > new Date(req.body.startDate) && eventObj.date < new Date(req.body.endDate))
                 events.push(eventObj);
         };
-        if (!events) return res.status(404).json({ error: `could not find any events between the dates ${req.body.startDate} and ${req.body.endDate}.` });*/
-        res.json(allEvents);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-})
-
-app.get('/api/events/some-events', async(req, res) => {
-    try {
-        const events = await Event.find({});
+        if (events.length === 0) return res.status(404).json({ error: `could not find any events between the dates ${req.body.startDate} and ${req.body.endDate}.` });
         res.json(events);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
 })
+
+
+
+
 
 app.post('/api/events/new-event', async (req, res) => {
     try {
