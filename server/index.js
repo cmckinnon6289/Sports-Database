@@ -3,15 +3,50 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const session = require('express-session');
+const passport = require('passport');
+const bcrypt = require('bcryptjs');
+const authRoutes = require('./routes/auth');
+const generateSalt = require('./saltGenerator');
+
 const Event = require('./models/Event');
 const Team = require('./models/Team');
+const User = require('./models/User');
 
 const app = express();
 const PORT = process.env.PORT || 621;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(session({
+  secret: `${generateSalt()}`, // Replace 'secret' with your session secret
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use('/auth', authRoutes);
 require('./db');
+
+const isAuthenticated = (req, res, next) => {
+    // Passport adds 'req.user' property if user is authenticated
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.redirect('/login');
+};
+
+const hasPermission = (requiredRole) => {
+    return (req, res, next) => {
+      // Check if user has the required role/permission
+        if (req.user && req.user.role === requiredRole) {
+        // User has the required role/permission, proceed to the next middleware
+            return next();
+        }
+    res.status(403).send('Forbidden'); // Send 403 Forbidden status
+    };
+};
 
 app.listen(PORT, () => {
     console.log(`Server running on ${PORT}`);
