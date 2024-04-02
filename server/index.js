@@ -95,6 +95,17 @@ app.get('/api/events/all-between', async (req,res) => {
     }
 })
 
+app.patch('api/events/id/:id', async(req, res) => {
+    try {
+        const event = await Event.findById(req.body.id);
+        if (!event) return res.status(404).json({ error: `could not find any event with id ${req.body.id}.` })
+        event[req.body.change] = req.body.value;
+        await event.save();
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
 app.post('/api/events/new-event', async (req, res) => {
     try {
         let eventDraft = req.body;
