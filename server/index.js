@@ -95,6 +95,23 @@ app.get('/api/events/all-between', async (req,res) => {
     }
 })
 
+app.get('/api/events/today', async (req,res) => {
+    try {
+        const allEvents = await Event.find({});
+        let events = [];
+        for (eventObj in allEvents) {
+            const date = new Date()
+            const eventDate = new Date(eventObj.date);
+            if (eventDate.getFullYear() === date.getFullYear() && eventDate.getMonth() === date.getMonth() && eventDate.getDate() === date.getDate()) {
+                events.push(eventObj);
+            }
+        }
+        if (events.length === 0) return res.status(404).json({ error: `could not find any events on ${date}.` })
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
 app.patch('api/events/id/:id', async(req, res) => {
     try {
         const event = await Event.findById(req.body.id);
