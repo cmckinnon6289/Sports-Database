@@ -170,6 +170,8 @@ app.get('/api/schools/by-id/:id', async(req,res) => {
     }
 })
 
+app.get('/api/schools')
+
 /*
 
 local functions
