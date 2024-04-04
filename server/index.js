@@ -98,9 +98,9 @@ app.get('/api/events/all-between', async (req,res) => {
 app.get('/api/events/today', async (req,res) => {
     try {
         const allEvents = await Event.find({});
+        const date = new Date();
         let events = [];
         for (eventObj in allEvents) {
-            const date = new Date()
             const eventDate = new Date(eventObj.date);
             if (eventDate.getFullYear() === date.getFullYear() && eventDate.getMonth() === date.getMonth() && eventDate.getDate() === date.getDate()) {
                 events.push(eventObj);
