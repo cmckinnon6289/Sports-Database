@@ -170,7 +170,14 @@ app.get('/api/schools/by-id/:id', async(req,res) => {
     }
 })
 
-app.get('/api/schools')
+app.get('/api/schools', async(req,res) => {
+    try {
+        const schools = await School.find({});
+        res.json(schools);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
 
 /*
 
