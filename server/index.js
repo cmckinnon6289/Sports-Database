@@ -10,6 +10,7 @@ const authRoutes = require('./routes/auth');
 const generateSalt = require('./saltGenerator');
 
 const Event = require('./models/Event');
+const School = require('./models/School');
 const Team = require('./models/Team');
 const User = require('./models/User');
 
@@ -133,7 +134,7 @@ app.post('/api/events/new-event', async (req, res) => {
         eventDraft.awayTeam = await Team.findById(eventDraft.awayTeam);
         const event = new Event(eventDraft);
         await event.save();
-        res.json(event);
+        res.status(201).json(event);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
@@ -143,7 +144,27 @@ app.post('/api/teams/new-team', async(req, res) => {
     try {
         const team = new Team(req.body);
         await team.save();
-        res.json(team);
+        res.status(201).json(team);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.post('/api/schools/new-school', async(req,res) => {
+    try {
+        const school = new School(req.body);
+        await school.save();
+        res.status(201).json(school);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.get('/api/schools/by-id/:id', async(req,res) => {
+    try {
+        const school = await School.findById(req.params.id);
+        if (!school) return res.status(404).json({ error: `could not find school with ID ${req.params.id}` })
+        res.json(school);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

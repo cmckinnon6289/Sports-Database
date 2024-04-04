@@ -13,10 +13,7 @@ const schoolSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    teamIDs: {
-        type: Array,
-        required: true
-    },
+    teamIDs: [],
     notes: String
 }, { collection: 'schools' });
 
