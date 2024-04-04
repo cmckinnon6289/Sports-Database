@@ -16,6 +16,6 @@ const teamSchema = new mongoose.Schema({
     notes: String
 }, { collection: 'teams' });
 
-const Team = mongoose.model('Team', teamSchema);
+const Team = mongoose.model('TeamRevised', teamSchema);
 
 module.exports = Team;
