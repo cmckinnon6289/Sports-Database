@@ -99,15 +99,17 @@ app.get('/api/events/all-between', async (req,res) => {
 app.get('/api/events/today', async (req,res) => {
     try {
         const allEvents = await Event.find({});
-        const date = new Date();
+        const todaysDate = new Date();
         let events = [];
-        for (eventObj in allEvents) {
-            const eventDate = new Date(eventObj.date);
-            if (eventDate.getFullYear() === date.getFullYear() && eventDate.getMonth() === date.getMonth() && eventDate.getDate() === date.getDate()) {
+        allEvents.forEach((eventObj) => {
+            console.log(eventObj.date)
+            if (eventObj.date.getFullYear() === todaysDate.getFullYear() && eventObj.date.getMonth() === todaysDate.getMonth() && eventObj.date.getDate() === todaysDate.getDate()) {
+                console.log("pushed");
                 events.push(eventObj);
             }
-        }
-        if (events.length === 0) return res.status(404).json({ error: `could not find any events on ${date}.` })
+        })
+        if (events.length === 0) return res.status(404).json({ error: `could not find any events on ${todaysDate}.` })
+        return res.status(200).json(events);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
