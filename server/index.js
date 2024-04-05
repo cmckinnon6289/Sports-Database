@@ -129,7 +129,7 @@ app.post('/api/events/new-event', async (req, res) => {
         const events = Event.find({});
         let submission = req.body;
         let eventDraft = {
-            id: events.length+1,
+            id: 999,
             name: 'placeholder until computed',
             homeTeam: '',
             awayTeam: '',
@@ -137,8 +137,10 @@ app.post('/api/events/new-event', async (req, res) => {
             location: ''
         }
         if (!events) eventDraft.id = 1;
+        else eventDraft.id = events.length + 1;
         eventDraft.homeTeam = await findTeam(submission.homeTeam);
         eventDraft.awayTeam = await findTeam(submission.awayTeam);
+        eventDraft.date = new Date(submission.date);
         if (!eventDraft.homeTeam || !eventDraft.awayTeam) return res.status(404).json({ error: `could not find a team object with either name ${req.body.homeTeam} or ${req.body.awayTeam}` }); 
 
         if(req.body.type === "home") eventDraft.location = eventDraft.homeTeam.location;
