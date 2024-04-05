@@ -136,7 +136,7 @@ app.post('/api/events/new-event', async (req, res) => {
             date: '',
             location: ''
         }
-        if (!events) eventDraft.id = 1;
+        if (isNaN(events.length)) eventDraft.id = 1;
         else eventDraft.id = events.length + 1;
         eventDraft.homeTeam = await findTeam(submission.homeTeam);
         eventDraft.awayTeam = await findTeam(submission.awayTeam);
