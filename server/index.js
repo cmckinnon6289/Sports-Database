@@ -136,6 +136,7 @@ app.post('/api/events/new-event', async (req, res) => {
             date: '',
             location: ''
         }
+        if (!events) eventDraft.id = 1;
         eventDraft.homeTeam = await findTeam(submission.homeTeam);
         eventDraft.awayTeam = await findTeam(submission.awayTeam);
         if (!eventDraft.homeTeam || !eventDraft.awayTeam) return res.status(404).json({ error: `could not find a team object with either name ${req.body.homeTeam} or ${req.body.awayTeam}` }); 
