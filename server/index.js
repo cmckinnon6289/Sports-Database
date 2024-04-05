@@ -126,12 +126,23 @@ app.patch('api/events/id/:id', async(req, res) => {
 
 app.post('/api/events/new-event', async (req, res) => {
     try {
-        let eventDraft = req.body;
-        eventDraft.homeTeam = await findTeam(eventDraft.homeTeam);
-        eventDraft.awayTeam = await findTeam(eventDraft.awayTeam);
+        const events = Event.find({});
+        let submission = req.body;
+        let eventDraft = {
+            id: events.length+1,
+            name: 'placeholder until computed',
+            homeTeam: '',
+            awayTeam: '',
+            date: '',
+            location: ''
+        }
+        eventDraft.homeTeam = await findTeam(submission.homeTeam);
+        eventDraft.awayTeam = await findTeam(submission.awayTeam);
         if (!eventDraft.homeTeam || !eventDraft.awayTeam) return res.status(404).json({ error: `could not find a team object with either id ${req.body.homeTeam} or ${req.body.awayTeam}` }); 
 
-        eventDraft.awayTeam = await Team.findById(eventDraft.awayTeam);
+        if(req.body.type === "home") eventDraft.location = eventDraft.homeTeam.location;
+        else eventDraft.location = eventDraft.awayTeam.location;
+
         const event = new Event(eventDraft);
         await event.save();
         res.status(201).json(event);
@@ -185,9 +196,9 @@ local functions
 
 */
 
-async function findTeam(id) {
+async function findTeam(name) {
     const teams = await Team.find({});
-    const team = teams.filter((team) => team.id === Number(id) ? team : null);
+    const team = teams.filter((team) => team.name === String(name) ? team : null);
     if (Array.isArray(team)) return team[0];
     return team;
 }
