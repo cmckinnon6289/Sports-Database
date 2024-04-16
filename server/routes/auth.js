@@ -51,7 +51,7 @@ router.get('/logout', (req, res) => {
 
 // router.post('/register'...)
 router.post('/register', async (req, res) => {
-    const { email, password, role } = req.body;
+    const { email, password, permissions } = req.body;
   
     try {
       // Check if the user already exists

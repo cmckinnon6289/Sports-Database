@@ -29,6 +29,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/auth', authRoutes);
 
+require('./passport');
 require('./db');
 
 const isAuthenticated = (req, res, next) => {

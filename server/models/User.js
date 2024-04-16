@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     permissions: {
-        type: String,
+        type: Number,
         required: true
     }
 }, { collection: 'users' });
