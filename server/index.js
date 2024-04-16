@@ -18,7 +18,7 @@ const app = express();
 const PORT = process.env.PORT || 621;
 
 app.use(cors());
-app.use(bodyParser.json());
+app.set('view engine', 'ejs'); // Assuming you're using EJS for templating
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
   secret: `${generateSalt()}`, // Replace 'secret' with your session secret
@@ -28,6 +28,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use('/auth', authRoutes);
+
 require('./db');
 
 const isAuthenticated = (req, res, next) => {
@@ -40,12 +41,10 @@ const isAuthenticated = (req, res, next) => {
 
 const hasPermission = (requiredRole) => {
     return (req, res, next) => {
-      // Check if user has the required role/permission
         if (req.user && req.user.role === requiredRole) {
-        // User has the required role/permission, proceed to the next middleware
             return next();
         }
-    res.status(403).send('Forbidden'); // Send 403 Forbidden status
+        res.status(403).send('Forbidden');
     };
 };
 

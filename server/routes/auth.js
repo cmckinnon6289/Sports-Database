@@ -4,22 +4,36 @@ const passport = require('passport');
 const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
+const enviro = require('dotenv')
+enviro.config()
 
 // POST request to handle login form submission
 router.post('/login', (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
+  console.log('happy')
+  console.log(req.body)
+  passport.authenticate('local', (err, user, info) => {   
+    console.log(1) 
+    console.log(err)
+    console.log(user)
+    console.log(info)
     if (err) {
       console.log(err)
     }
     if (!user) {
-      return res.redirect('/login'); // Redirect to login page
-    }
+      return res.status(401).send(info.message);    }
     req.logIn(user, (err) => {
       if (err) {
         return next(err);
       }
-      return res.redirect('/dashboard'); // Redirect to dashboard on successful login
+
+      const jwt_USER = {
+        _id : user._id,
+        role: user.role,
+        email: user.email
+      }
+      const token = jwt.sign(jwt_USER, `${process.env.JWT_SECRET}`, { expiresIn: '1h' });
+      return res.status(200).json({ token });
     });
   })(req, res, next);
 });
