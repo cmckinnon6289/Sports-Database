@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const teamSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true
@@ -10,11 +10,11 @@ const teamSchema = new mongoose.Schema({
         required: true
     },
     permissions: {
-        type: Number,
+        type: String,
         required: true
     }
 }, { collection: 'users' });
 
-const Team = mongoose.model('Team', teamSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = Team;
+module.exports = User;

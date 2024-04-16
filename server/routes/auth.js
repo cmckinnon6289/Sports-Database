@@ -62,13 +62,15 @@ router.post('/register', async (req, res) => {
       }
   
       // Hash the password
+      console.log(1)
       const hashedPassword = await bcrypt.hash(password, 10);
+      console.log(2)
   
       // Create a new user
       const newUser = new User({
         email,
         password: hashedPassword,
-        role
+        permissions
       });
   
       // Save the new user to the database
@@ -77,7 +79,7 @@ router.post('/register', async (req, res) => {
       return res.status(201).json({ message: 'User created successfully.' });
     } catch (error) {
       console.error('Error registering user:', error);
-      return res.status(500).json({ message: 'Internal server error.' });
+      return res.status(500).json({ message: 'Internal server error.', error: error.message });
     }
   });
   
