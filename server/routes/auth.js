@@ -29,8 +29,7 @@ router.post('/login', (req, res, next) => {
 
       const jwt_USER = {
         _id : user._id,
-        role: user.role,
-        email: user.email
+        permissions: user.permissions
       }
       const token = jwt.sign(jwt_USER, `${process.env.JWT_SECRET}`, { expiresIn: '1h' });
       return res.status(200).json({ token });
