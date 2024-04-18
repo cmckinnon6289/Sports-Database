@@ -13,6 +13,7 @@ const Event = require('./models/Event');
 const School = require('./models/School');
 const Team = require('./models/Team');
 const User = require('./models/User');
+const League = require('./models/League');
 
 const app = express();
 const PORT = process.env.PORT || 621;
@@ -155,6 +156,39 @@ app.post('/api/events/new-event', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+app.get('/api/users/get-perms/:id', async(req, res) => { 
+    try {
+        console.log(req.params.id);
+        const user = await User.findById(req.params.id);
+        if (!user) return res.status(404).json({error: `could not find user with id ${req.body.id}.`});
+        res.status(200).json(user);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.get('/api/leagues', async(req, res) => {
+    try {
+        const leagues = await League.find({});
+        res.status(200).json(leagues);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.post('/api/leagues/new-league', async(req, res) => {
+    try {
+        const leagues = await League.find({});
+        const league = new League(req.body);
+        leagues.forEach((existingLeague) => {
+            if (league.name === existingLeague.name) { return res.status(400).json({ error: `league with name ${league.name} already exists.` }) }
+        })
+        await league.save()
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
 
 app.post('/api/teams/new-team', async(req, res) => {
     try {
