@@ -5,7 +5,7 @@ const eventSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    name: {
+    league: {
         type: String,
         required: true
     },

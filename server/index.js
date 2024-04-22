@@ -97,6 +97,48 @@ app.get('/api/events/all-between', async (req,res) => {
     }
 })
 
+app.get('/api/events/today-and-beyond', async(req, res) => {
+    try {
+        const allEvents = await Event.find({});
+        let events = [];
+        allEvents.forEach((eventObj) => {
+            const eventDate = new Date(eventObj.date)
+            if (eventDate > new Date()) events.push(eventObj);
+        })
+        if (events.length === 0) return res.status(404).json({ error: `could not find any events that start on or after ${new Date()}.` });
+        res.json(events);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
+app.get('/api/events/filters', async(req, res) => {
+    try {
+        let allEvents = await Event.find({});
+        const filters = req.params;
+        if (filters.league) {
+            for (i=0; i < allEvents.length; i++) {
+                if (allEvents[i].league != filters.league) allEvents.splice(i,1);
+            }
+        }
+        if (filters.maxDate) {
+            for (i=0; i < allEvents.length; i++) {
+                if (allEvents[i].date > filters.maxDate) allEvents.splice(i,1);
+            }
+        }
+        if (filters.minDate) {
+            for (i=0; i < allEvents.length; i++) {
+                if (allEvents[i].date < filters.minDate || allEvents[i].date < new Date()) allEvents.splice(i,1);
+            }
+        }
+        if (allEvents.length < 0) {
+            res.status(404).json({error: `no results with given filters`})
+        } else res.json(allEvents);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+})
+
 app.get('/api/events/today', async (req,res) => {
     try {
         const allEvents = await Event.find({});
@@ -180,6 +222,7 @@ app.get('/api/leagues', async(req, res) => {
 
 app.post('/api/leagues/new-league', async(req, res) => {
     try {
+        console.log(req.body);
         const leagues = await League.find({});
         const league = new League(req.body);
         leagues.forEach((existingLeague) => {
@@ -203,6 +246,7 @@ app.post('/api/teams/new-team', async(req, res) => {
 
 app.post('/api/schools/new-school', async(req,res) => {
     try {
+        console.log(req.body);
         const school = new School(req.body);
         await school.save();
         res.status(201).json(school);
